@@ -32,7 +32,7 @@ final class TrackersViewController: UIViewController {
         return field
     }()
     
-    private let placeholderImage: UIImageView = {
+    private var placeholderImage: UIImageView = {
         let image = UIImageView(image: UIImage(named: "TrackersPlaceholder"))
         
         image.widthAnchor.constraint(equalToConstant: 80).isActive = true
@@ -41,7 +41,8 @@ final class TrackersViewController: UIViewController {
         return image
     }()
     
-    private let placeholderLabel: UILabel = {
+    
+    private var placeholderLabel: UILabel = {
         let label = UILabel()
         
         label.text = "Что будем отслеживать?"
@@ -304,7 +305,7 @@ private extension TrackersViewController {
             }
         }
         visibleCategories = searchedCategories
-        visibleCategories.isEmpty ? showPlaceholder() : hidePlaceholder()
+        visibleCategories.isEmpty ? showSearchPlaceholder() : hidePlaceholder()
         trackerCollection.reloadData()
     }
     
@@ -326,7 +327,7 @@ private extension TrackersViewController {
                 visibleCategories.append(CategoryModel(title: category.title, trackers: visibleTrackers))
             }
         }
-        visibleCategories.isEmpty ? showPlaceholder() : hidePlaceholder()
+        visibleCategories.isEmpty ? showTrackersPlaceholder() : hidePlaceholder()
         trackerCollection.reloadData()
     }
     
@@ -337,7 +338,16 @@ private extension TrackersViewController {
         return (weekDayNumber - calendar.firstWeekday + daysInWeek) % daysInWeek + 1
     }
     
-    func showPlaceholder() {
+    func showTrackersPlaceholder() {
+        placeholderImage.image = UIImage(named: "TrackersPlaceholder")
+        placeholderLabel.text = "Что будем отслеживать?"
+        placeholderImage.isHidden = false
+        placeholderLabel.isHidden = false
+    }
+    
+    func showSearchPlaceholder() {
+        placeholderImage.image = UIImage(named: "SearchPlaceholder")
+        placeholderLabel.text = "Ничего не найдено"
         placeholderImage.isHidden = false
         placeholderLabel.isHidden = false
     }
