@@ -96,6 +96,9 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         label.text = model.emoji
         label.font = .systemFont(ofSize: 16, weight: .medium)
         
+        for view in emojiView.subviews{
+            view.removeFromSuperview() // цикл чтобы emoji не накладывались друг на друга
+        }
         emojiView.addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.centerXAnchor.constraint(equalTo: emojiView.centerXAnchor).isActive = true
