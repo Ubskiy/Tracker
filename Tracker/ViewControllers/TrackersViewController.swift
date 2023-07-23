@@ -346,7 +346,7 @@ private extension TrackersViewController {
     }
     
     func showSearchPlaceholder() {
-        placeholderImage.image = UIImage(named: "SearchPlaceholder")
+        placeholderImage.image = UIImage(named: "SearchPlaceHolder")
         placeholderLabel.text = "Ничего не найдено"
         placeholderImage.isHidden = false
         placeholderLabel.isHidden = false
