@@ -60,6 +60,15 @@ final class CreateEventViewController: UIViewController {
         return button
     }()
     
+    private lazy var emojiTitle: UILabel = {
+        let label = UILabel()
+        
+        label.text = "Emoji"
+        label.textColor = .ypBlackDay
+        label.font = .systemFont(ofSize: 19, weight: .bold)
+        return label
+    }()
+    
     private var settings: Array<SettingOptions> = []
     
     override func viewDidLoad() {
@@ -113,10 +122,12 @@ final class CreateEventViewController: UIViewController {
         view.addSubview(nameField)
         view.addSubview(settingTable)
         view.addSubview(buttonStack)
+        view.addSubview(emojiTitle)
         
         nameField.translatesAutoresizingMaskIntoConstraints = false
         settingTable.translatesAutoresizingMaskIntoConstraints = false
         buttonStack.translatesAutoresizingMaskIntoConstraints = false
+        emojiTitle.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             nameField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
@@ -129,7 +140,11 @@ final class CreateEventViewController: UIViewController {
             
             buttonStack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             buttonStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            buttonStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+            buttonStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            emojiTitle.topAnchor.constraint(equalTo: settingTable.bottomAnchor, constant: 32),
+            emojiTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 28 ),
+            emojiTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 295)
         ])
     }
     

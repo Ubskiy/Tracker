@@ -33,6 +33,9 @@
 		B8C27CAD2A6551060085686A /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C27CAC2A6551060085686A /* SwitchTableViewCell.swift */; };
 		B8C27CAF2A65511C0085686A /* TrackerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C27CAE2A65511C0085686A /* TrackerCollectionViewCell.swift */; };
 		B8C27CB12A6551340085686A /* TrackerCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C27CB02A6551340085686A /* TrackerCollectionViewHeader.swift */; };
+		B8C27CB32A7D271F0085686A /* EmojiCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C27CB22A7D271F0085686A /* EmojiCollectionViewCell.swift */; };
+		B8C27CB52A7D28CF0085686A /* ColorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C27CB42A7D28CF0085686A /* ColorCollectionViewCell.swift */; };
+		B8C27CB72A87CF9B0085686A /* CollectionsDataSources.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C27CB62A87CF9B0085686A /* CollectionsDataSources.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +67,9 @@
 		B8C27CAC2A6551060085686A /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
 		B8C27CAE2A65511C0085686A /* TrackerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCollectionViewCell.swift; sourceTree = "<group>"; };
 		B8C27CB02A6551340085686A /* TrackerCollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCollectionViewHeader.swift; sourceTree = "<group>"; };
+		B8C27CB22A7D271F0085686A /* EmojiCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCollectionViewCell.swift; sourceTree = "<group>"; };
+		B8C27CB42A7D28CF0085686A /* ColorCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCollectionViewCell.swift; sourceTree = "<group>"; };
+		B8C27CB62A87CF9B0085686A /* CollectionsDataSources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionsDataSources.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,6 +169,9 @@
 				B8C27CAC2A6551060085686A /* SwitchTableViewCell.swift */,
 				B8C27CAE2A65511C0085686A /* TrackerCollectionViewCell.swift */,
 				B8C27CB02A6551340085686A /* TrackerCollectionViewHeader.swift */,
+				B8C27CB22A7D271F0085686A /* EmojiCollectionViewCell.swift */,
+				B8C27CB42A7D28CF0085686A /* ColorCollectionViewCell.swift */,
+				B8C27CB62A87CF9B0085686A /* CollectionsDataSources.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -238,11 +247,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B8C27CB72A87CF9B0085686A /* CollectionsDataSources.swift in Sources */,
 				B8C27C9C2A6548EA0085686A /* WeekDay.swift in Sources */,
 				B8A52D932A140D03003218FC /* MainTabBarController.swift in Sources */,
 				B8C27CAD2A6551060085686A /* SwitchTableViewCell.swift in Sources */,
 				B8A52D8F2A140D03003218FC /* AppDelegate.swift in Sources */,
 				B8C27C912A3BA95F0085686A /* RecordModel.swift in Sources */,
+				B8C27CB52A7D28CF0085686A /* ColorCollectionViewCell.swift in Sources */,
 				B8C27CAF2A65511C0085686A /* TrackerCollectionViewCell.swift in Sources */,
 				B8C27C8C2A3BA5FC0085686A /* UIViewController+extensions.swift in Sources */,
 				B8C27CA72A6550C80085686A /* CustomTextField.swift in Sources */,
@@ -257,6 +268,7 @@
 				B8C27C962A65489F0085686A /* CollectionWidthParameters.swift in Sources */,
 				B8A52D912A140D03003218FC /* SceneDelegate.swift in Sources */,
 				B8C27C982A6548C00085686A /* SettingOptions.swift in Sources */,
+				B8C27CB32A7D271F0085686A /* EmojiCollectionViewCell.swift in Sources */,
 				B8C27C932A3BA9750085686A /* TrackerModel.swift in Sources */,
 				B8A52DA52A141A22003218FC /* UIColor+extensions.swift in Sources */,
 				B8C27CA22A65498E0085686A /* CreateHabitViewController.swift in Sources */,
