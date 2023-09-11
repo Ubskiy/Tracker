@@ -17,6 +17,7 @@ final class CreateHabitViewController: UIViewController {
         return collection
     }()
     
+    
     private let colorCollection: UICollectionView = {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         
@@ -222,15 +223,20 @@ final class CreateHabitViewController: UIViewController {
     private func makeViewLayout() {
         view.backgroundColor = .ypWhiteDay
         
+        let scrollView = UIScrollView()
+        scrollView.contentSize = CGSize(width: view.bounds.width, height: view.bounds.height)
+        scrollView.isScrollEnabled = true
+        
         let buttonStack = makeButtonStack()
         
-        view.addSubview(nameField)
-        view.addSubview(settingTable)
-        view.addSubview(buttonStack)
-        view.addSubview(emojiTitle)
-        view.addSubview(emojiCollection)
-        view.addSubview(colorTitle)
-        view.addSubview(colorCollection)
+        scrollView.addSubview(nameField)
+        scrollView.addSubview(settingTable)
+        scrollView.addSubview(emojiTitle)
+        scrollView.addSubview(emojiCollection)
+        scrollView.addSubview(colorTitle)
+        scrollView.addSubview(colorCollection)
+        scrollView.addSubview(buttonStack)
+        view.addSubview(scrollView)
         
         nameField.translatesAutoresizingMaskIntoConstraints = false
         settingTable.translatesAutoresizingMaskIntoConstraints = false
@@ -239,37 +245,44 @@ final class CreateHabitViewController: UIViewController {
         emojiCollection.translatesAutoresizingMaskIntoConstraints = false
         colorTitle.translatesAutoresizingMaskIntoConstraints = false
         colorCollection.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            nameField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            nameField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            nameField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
+            
+            nameField.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 10),
+            nameField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+            nameField.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
             
             settingTable.topAnchor.constraint(equalTo: nameField.bottomAnchor, constant: 24),
-            settingTable.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            settingTable.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            settingTable.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+            settingTable.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
             
-            buttonStack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            buttonStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            buttonStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            buttonStack.topAnchor.constraint(equalTo: colorCollection.bottomAnchor, constant: 40),
+            buttonStack.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            buttonStack.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
+            buttonStack.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -20),
             
             emojiTitle.topAnchor.constraint(equalTo: settingTable.bottomAnchor, constant: 32),
-            emojiTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 28 ),
-            emojiTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 295),
+            emojiTitle.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 28 ),
+            emojiTitle.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: 295),
             
             emojiCollection.topAnchor.constraint(equalTo: emojiTitle.bottomAnchor),
-            emojiCollection.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18),
-            emojiCollection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18),
+            emojiCollection.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -18),
+            emojiCollection.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 18),
             emojiCollection.heightAnchor.constraint(equalToConstant: 156),
             
             colorTitle.topAnchor.constraint(equalTo: emojiCollection.bottomAnchor, constant: 16),
-            colorTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 28),
-            colorTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -299),
+            colorTitle.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 28),
+            colorTitle.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -299),
             
             colorCollection.topAnchor.constraint(equalTo: colorTitle.bottomAnchor),
-            colorCollection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18),
-            colorCollection.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -19),
-            colorCollection.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 110)
+            colorCollection.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 18),
+            colorCollection.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -19),
+            colorCollection.heightAnchor.constraint(equalToConstant: 156),
             
         ])
     }
