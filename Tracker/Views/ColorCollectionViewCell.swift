@@ -7,11 +7,7 @@
 
 import UIKit
 
-protocol ColorCollectionViewCellDelegate: AnyObject {
-    func didTapColor(at indexPath: IndexPath)
-}
-
-final class ColorCollectionViewCell: UICollectionViewCell, ColorCollectionViewCellDelegate {
+final class ColorCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "ColorCollectionViewCell"
     
@@ -39,11 +35,9 @@ final class ColorCollectionViewCell: UICollectionViewCell, ColorCollectionViewCe
     
     private var indexPath: IndexPath?
     
-    weak var delegate: ColorCollectionViewCellDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         makeViewLayout()
     }
     
@@ -74,8 +68,9 @@ final class ColorCollectionViewCell: UICollectionViewCell, ColorCollectionViewCe
         ])
     }
     
-    func didTapColor(at indexPath: IndexPath) {
-        
+    func didTapColor(at indexPath: IndexPath) -> Int {
+        print(indexPath.row, "ABRACADABRA")
+        return indexPath.row
     }
 }
 

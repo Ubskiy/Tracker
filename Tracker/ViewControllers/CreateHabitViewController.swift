@@ -8,7 +8,6 @@ protocol CreateHabitViewControllerDelegate: AnyObject {
 final class CreateHabitViewController: UIViewController {
     private let emojiCollection: UICollectionView = {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-        
         collection.register(
             EmojiCollectionViewCell.self,
             forCellWithReuseIdentifier: EmojiCollectionViewCell.identifier
@@ -117,14 +116,16 @@ final class CreateHabitViewController: UIViewController {
     private var configuredSchedule: Set<WeekDay> = []
     
     weak var delegate: CreateHabitViewControllerDelegate?
+    let colorCollectionDelegate = ColorCollectionViewDelegate()
+    let emojiCollectionDelegate = EmojiCollectionViewDelegate()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         emojiCollection.dataSource = self
-        emojiCollection.delegate = self
+        emojiCollection.delegate = emojiCollectionDelegate
         colorCollection.dataSource = self
-        colorCollection.delegate = self
+        colorCollection.delegate = colorCollectionDelegate
         configureCollections()
         
         settingTable.dataSource = self
@@ -157,13 +158,12 @@ final class CreateHabitViewController: UIViewController {
         guard let habitName = nameField.text else {
             return
         }
-        let testNumber = Int.random(in: 0..<testEmojis.count)
         
         let tracker = TrackerModel(
             id: UUID(),
             name: habitName.trimmingCharacters(in: .whitespaces),
-            color: UIColor(named: "YPSelection\(testNumber % 18 + 1)")!,
-            emoji: testEmojis[testNumber],
+            color: colorCollectionDelegate.selectedColorNum + 1,
+            emoji: testEmojis[emojiCollectionDelegate.selectedEmojiNum],
             schedule: configuredSchedule
         )
         delegate?.didCreateNewHabit(model: tracker)
@@ -359,7 +359,6 @@ extension CreateHabitViewController: UICollectionViewDataSource {
                 preconditionFailure("Failed to cast UICollectionViewCell as EmojiCollectionViewCell")
             }
             
-            emojiCell.delegate = self
             emojiCell.configure(emoji: testEmojis[indexPath.row], at: indexPath)
             
             return emojiCell
@@ -371,7 +370,6 @@ extension CreateHabitViewController: UICollectionViewDataSource {
                 preconditionFailure("Failed to cast UICollectionViewCell as EmojiCollectionViewCell")
             }
             
-            colorCell.delegate = self
             colorCell.configure(at: indexPath)
             
             return colorCell
@@ -382,19 +380,7 @@ extension CreateHabitViewController: UICollectionViewDataSource {
     }
 }
 
-extension CreateHabitViewController: EmojiCollectionViewCellDelegate {
-    
-    func didTapEmoji(at indexPath: IndexPath) {
-        
-    }
-}
 
-extension CreateHabitViewController: ColorCollectionViewCellDelegate {
-    
-    func didTapColor(at indexPath: IndexPath) {
-        
-    }
-}
 
 
 

@@ -7,11 +7,7 @@
 
 import UIKit
 
-protocol EmojiCollectionViewCellDelegate: AnyObject {
-    func didTapEmoji(at indexPath: IndexPath)
-}
-
-final class EmojiCollectionViewCell: UICollectionViewCell, EmojiCollectionViewCellDelegate {
+final class EmojiCollectionViewCell: UICollectionViewCell{
     
     static let identifier = "EmojiCollectionViewCell"
     
@@ -42,8 +38,6 @@ final class EmojiCollectionViewCell: UICollectionViewCell, EmojiCollectionViewCe
     }()
     
     private var indexPath: IndexPath?
-    
-    weak var delegate: EmojiCollectionViewCellDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -76,9 +70,6 @@ final class EmojiCollectionViewCell: UICollectionViewCell, EmojiCollectionViewCe
             emojiLabel.centerYAnchor.constraint(equalTo: canvasView.centerYAnchor)
             
         ])
-    }
-    
-    func didTapEmoji(at indexPath: IndexPath) {
     }
 }
 

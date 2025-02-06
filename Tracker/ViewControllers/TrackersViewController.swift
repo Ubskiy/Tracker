@@ -76,7 +76,7 @@ final class TrackersViewController: UIViewController {
                 TrackerModel(
                     id: UUID(),
                     name: "Тестовый трекер",
-                    color: .ypSelection2,
+                    color: 2,
                     emoji: "🍏",
                     schedule: [.monday, .tuesday, .wednesday, .thursday, .friday]
                 )

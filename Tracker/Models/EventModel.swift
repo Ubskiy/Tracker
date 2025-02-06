@@ -1,9 +1,9 @@
 import UIKit
 
-struct TrackerModel {
+struct EventModel {
     let id: UUID
     let name: String
     let color: Int
     let emoji: String
-    let schedule: Set<WeekDay>
+    let Date: Date
 }
