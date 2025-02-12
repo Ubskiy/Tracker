@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B88307EC2D54DF5D00F079ED /* EventModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88307EB2D54DF5D00F079ED /* EventModel.swift */; };
 		B8A52D8F2A140D03003218FC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A52D8E2A140D03003218FC /* AppDelegate.swift */; };
 		B8A52D912A140D03003218FC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A52D902A140D03003218FC /* SceneDelegate.swift */; };
 		B8A52D932A140D03003218FC /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A52D922A140D03003218FC /* MainTabBarController.swift */; };
@@ -46,7 +45,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		B88307EB2D54DF5D00F079ED /* EventModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventModel.swift; sourceTree = "<group>"; };
 		B8A52D8B2A140D03003218FC /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8A52D8E2A140D03003218FC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B8A52D902A140D03003218FC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -161,7 +159,6 @@
 				B8C27C8E2A3BA9450085686A /* CategoryModel.swift */,
 				B8C27C902A3BA95F0085686A /* RecordModel.swift */,
 				B8C27C922A3BA9750085686A /* TrackerModel.swift */,
-				B88307EB2D54DF5D00F079ED /* EventModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -283,7 +280,6 @@
 				B8C27CAD2A6551060085686A /* SwitchTableViewCell.swift in Sources */,
 				B8A52D8F2A140D03003218FC /* AppDelegate.swift in Sources */,
 				B8E20AC02AB1CE1500F80456 /* CoreDataHelpers.swift in Sources */,
-				B88307EC2D54DF5D00F079ED /* EventModel.swift in Sources */,
 				B8C27C912A3BA95F0085686A /* RecordModel.swift in Sources */,
 				B8C27CB52A7D28CF0085686A /* ColorCollectionViewCell.swift in Sources */,
 				B8C27CAF2A65511C0085686A /* TrackerCollectionViewCell.swift in Sources */,

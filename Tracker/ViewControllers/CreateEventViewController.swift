@@ -1,8 +1,8 @@
 import UIKit
 
 protocol CreateEventViewControllerDelegate: AnyObject {
-    func didCreateNewEvent(model: EventModel)
-    func didCancelNewEvent()
+    func didCreateNewEvent(model: TrackerModel)
+    func didCancelNewHabit()
 }
 
 final class CreateEventViewController: UIViewController {
@@ -58,7 +58,7 @@ final class CreateEventViewController: UIViewController {
         return label
     }()
     
-    private let nameField: CustomTextField = {
+    private lazy var nameField: CustomTextField = {
         let field = CustomTextField()
         
         field.placeholder = "Введите название трекера"
@@ -118,6 +118,7 @@ final class CreateEventViewController: UIViewController {
         button.setTitle("Создать", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         button.backgroundColor = .ypGray
+        button.isEnabled = false
         
         button.layer.masksToBounds = true
         button.layer.cornerRadius = 16
@@ -167,12 +168,13 @@ final class CreateEventViewController: UIViewController {
             return
         }
         
-        let event = EventModel(
+        let event = TrackerModel(
             id: UUID(),
             name: eventName.trimmingCharacters(in: .whitespaces),
             color: colorCollectionDelegate.selectedColorNum + 1,
             emoji: testEmojis[emojiCollectionDelegate.selectedEmojiNum],
-            Date: Date()
+            schedule: Set<WeekDay>(),
+            creationDate: Date() // Используем текущую дату для определения дня недели
         )
         delegate?.didCreateNewEvent(model: event)
     }

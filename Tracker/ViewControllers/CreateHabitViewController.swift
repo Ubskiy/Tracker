@@ -164,7 +164,8 @@ final class CreateHabitViewController: UIViewController {
             name: habitName.trimmingCharacters(in: .whitespaces),
             color: colorCollectionDelegate.selectedColorNum + 1,
             emoji: testEmojis[emojiCollectionDelegate.selectedEmojiNum],
-            schedule: configuredSchedule
+            schedule: configuredSchedule,
+            creationDate: nil
         )
         delegate?.didCreateNewHabit(model: tracker)
     }

@@ -78,7 +78,8 @@ final class TrackersViewController: UIViewController {
                     name: "Тестовый трекер",
                     color: 2,
                     emoji: "🍏",
-                    schedule: [.monday, .tuesday, .wednesday, .thursday, .friday]
+                    schedule: [.monday, .tuesday, .wednesday, .thursday, .friday],
+                    creationDate: nil
                 )
             ]
         )
@@ -259,20 +260,8 @@ extension TrackersViewController: TrackerCollectionViewCellDelegate {
         trackerCollection.reloadItems(at: [indexPath])
     }
 }
-
-extension TrackersViewController: CreateTrackerViewControllerDelegate {
     
-    func didCreateNewTracker(model: TrackerModel) {
-        let testIndex = 0
-        
-        var updatedTrackers = categories[testIndex].trackers
-        updatedTrackers.append(model)
-        categories[testIndex] = CategoryModel(title: categories[testIndex].title, trackers: updatedTrackers)
-        
-        didChangeSelectedDate()
-        dismiss(animated: true)
-    }
-}
+
 
 private extension TrackersViewController {
     
@@ -316,12 +305,20 @@ private extension TrackersViewController {
             var visibleTrackers: Array<TrackerModel> = []
             
             for tracker in category.trackers {
-                guard let weekDay = WeekDay(rawValue: calculateWeekDayNumber(for: selectedDate)),
-                      tracker.schedule.contains(weekDay)
-                else {
-                    continue
+                if let creationDate = tracker.creationDate {
+                    // Для нерегулярных событий - показываем только если дата совпадает
+                    if Calendar.current.isDate(creationDate, inSameDayAs: selectedDate) {
+                        visibleTrackers.append(tracker)
+                    }
+                } else {
+                    // Для регулярных привычек - проверяем по расписанию
+                    guard let weekDay = WeekDay(rawValue: calculateWeekDayNumber(for: selectedDate)),
+                          tracker.schedule.contains(weekDay)
+                    else {
+                        continue
+                    }
+                    visibleTrackers.append(tracker)
                 }
-                visibleTrackers.append(tracker)
             }
             if !visibleTrackers.isEmpty {
                 visibleCategories.append(CategoryModel(title: category.title, trackers: visibleTrackers))
@@ -355,6 +352,20 @@ private extension TrackersViewController {
     func hidePlaceholder() {
         placeholderImage.isHidden = true
         placeholderLabel.isHidden = true
+    }
+}
+
+extension TrackersViewController: CreateTrackerViewControllerDelegate {
+    
+    func didCreateNewTracker(model: TrackerModel) {
+        let testIndex = 0
+        
+        var updatedTrackers = categories[testIndex].trackers
+        updatedTrackers.append(model)
+        categories[testIndex] = CategoryModel(title: categories[testIndex].title, trackers: updatedTrackers)
+        
+        didChangeSelectedDate()
+        dismiss(animated: true)
     }
 }
 
