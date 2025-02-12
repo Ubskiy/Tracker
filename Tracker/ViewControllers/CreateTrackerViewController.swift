@@ -53,8 +53,10 @@ final class CreateTrackerViewController: UIViewController {
     
     @objc private func didTapEventButton() {
         let createEventController = CreateEventViewController()
+        createEventController.delegate = self
         present(UINavigationController(rootViewController: createEventController), animated: true)
     }
+    
     
     private func setupNavigationBar() {
         let titleAttributes = [
@@ -100,6 +102,13 @@ extension CreateTrackerViewController: CreateHabitViewControllerDelegate {
     }
     
     func didCancelNewHabit() {
+        dismiss(animated: true)
+    }
+}
+
+extension CreateTrackerViewController: CreateEventViewControllerDelegate {
+    func didCreateNewEvent(model: TrackerModel) {
+        delegate?.didCreateNewTracker(model: model) // или используйте нужную категорию
         dismiss(animated: true)
     }
 }

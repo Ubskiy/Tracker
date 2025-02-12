@@ -89,8 +89,16 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         
         let image = isCompleted ? UIImage(named: "CheckMarkButton") : UIImage(named: "PlusButton")
         incrementButton.setImage(image?.withTintColor(.ypWhiteDay), for: .normal)
-        incrementButton.backgroundColor = isCompleted ? model.color.withAlphaComponent(0.3) : model.color
-        canvasView.backgroundColor = model.color
+        
+        guard let modelColor = intToColor(number: model.color) else {
+            print("Не найдено указанного цвета")
+            return
+        }
+        
+        incrementButton.backgroundColor = isCompleted ?
+        
+        modelColor.withAlphaComponent(0.3) : modelColor
+        canvasView.backgroundColor = modelColor
         
         let label = UILabel()
         label.text = model.emoji
@@ -134,6 +142,11 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         } else {
             delegate?.completeTracker(with: trackerID, at: indexPath)
         }
+    }
+    
+    private func intToColor(number: Int) -> UIColor? {
+        print(number)
+        return UIColor(named: "YPSelection\(number)")
     }
     
     private func makeViewLayout() {
