@@ -7,6 +7,7 @@ protocol CreateEventViewControllerDelegate: AnyObject {
 
 final class CreateEventViewController: UIViewController {
     
+    let selectedDate: Date
     weak var delegate: CreateEventViewControllerDelegate?
     let colorCollectionDelegate = ColorCollectionViewDelegate()
     let emojiCollectionDelegate = EmojiCollectionViewDelegate()
@@ -86,6 +87,15 @@ final class CreateEventViewController: UIViewController {
         
         return table
     }()
+    
+    init(selectedDate: Date) {
+        self.selectedDate = selectedDate
+        super.init(nibName: nil, bundle: nil)
+    }
+        
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private func configureCollections() {
         let layout = UICollectionViewFlowLayout()
@@ -174,7 +184,7 @@ final class CreateEventViewController: UIViewController {
             color: colorCollectionDelegate.selectedColorNum + 1,
             emoji: testEmojis[emojiCollectionDelegate.selectedEmojiNum],
             schedule: Set<WeekDay>(),
-            creationDate: Date() // Используем текущую дату для определения дня недели
+            creationDate: selectedDate // Используем текущую дату для определения дня недели
         )
         delegate?.didCreateNewEvent(model: event)
     }

@@ -69,7 +69,6 @@ final class ColorCollectionViewCell: UICollectionViewCell {
     }
     
     func didTapColor(at indexPath: IndexPath) -> Int {
-        print(indexPath.row, "ABRACADABRA")
         return indexPath.row
     }
 }

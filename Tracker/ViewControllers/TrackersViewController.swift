@@ -109,7 +109,7 @@ final class TrackersViewController: UIViewController {
     }
     
     @objc private func didTapAddButton() {
-        let createTrackerController = CreateTrackerViewController()
+        let createTrackerController = CreateTrackerViewController(selectedDate: selectedDate)
         createTrackerController.delegate = self
         present(UINavigationController(rootViewController: createTrackerController), animated: true)
     }

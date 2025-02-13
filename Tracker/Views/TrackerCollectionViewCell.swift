@@ -145,7 +145,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     }
     
     private func intToColor(number: Int) -> UIColor? {
-        print(number)
         return UIColor(named: "YPSelection\(number)")
     }
     
