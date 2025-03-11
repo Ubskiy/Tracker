@@ -6,6 +6,27 @@ protocol CreateHabitViewControllerDelegate: AnyObject {
 }
 
 final class CreateHabitViewController: UIViewController {
+    private let emojiCollection: UICollectionView = {
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        collection.register(
+            EmojiCollectionViewCell.self,
+            forCellWithReuseIdentifier: EmojiCollectionViewCell.identifier
+        )
+
+        return collection
+    }()
+    
+    
+    private let colorCollection: UICollectionView = {
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        
+        collection.register(
+            ColorCollectionViewCell.self,
+            forCellWithReuseIdentifier: ColorCollectionViewCell.identifier
+        )
+
+        return collection
+    }()
     
     private lazy var nameField: CustomTextField = {
         let field = CustomTextField()
@@ -67,6 +88,24 @@ final class CreateHabitViewController: UIViewController {
         return button
     }()
     
+    private lazy var emojiTitle: UILabel = {
+        let label = UILabel()
+        
+        label.text = "Emoji"
+        label.textColor = .ypBlackDay
+        label.font = .systemFont(ofSize: 19, weight: .bold)
+        return label
+    }()
+    
+    private lazy var colorTitle: UILabel = {
+        let label = UILabel()
+        
+        label.text = "Цвет"
+        label.textColor = .ypBlackDay
+        label.font = .systemFont(ofSize: 19, weight: .bold)
+        return label
+    }()
+    
     private let testEmojis: Array<String> = [
         "🍇", "🍈", "🍉", "🍊", "🍋", "🍌", "🍍", "🥭", "🍎", "🍏",
         "🍐", "🍒", "🍓", "🫐", "🥝", "🍅", "🫒", "🥥", "🥑", "🍆",
@@ -77,9 +116,17 @@ final class CreateHabitViewController: UIViewController {
     private var configuredSchedule: Set<WeekDay> = []
     
     weak var delegate: CreateHabitViewControllerDelegate?
+    let colorCollectionDelegate = ColorCollectionViewDelegate()
+    let emojiCollectionDelegate = EmojiCollectionViewDelegate()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        emojiCollection.dataSource = self
+        emojiCollection.delegate = emojiCollectionDelegate
+        colorCollection.dataSource = self
+        colorCollection.delegate = colorCollectionDelegate
+        configureCollections()
         
         settingTable.dataSource = self
         settingTable.delegate = self
@@ -111,14 +158,14 @@ final class CreateHabitViewController: UIViewController {
         guard let habitName = nameField.text else {
             return
         }
-        let testNumber = Int.random(in: 0..<testEmojis.count)
         
         let tracker = TrackerModel(
             id: UUID(),
             name: habitName.trimmingCharacters(in: .whitespaces),
-            color: UIColor(named: "YPSelection\(testNumber % 18 + 1)")!,
-            emoji: testEmojis[testNumber],
-            schedule: configuredSchedule
+            color: colorCollectionDelegate.selectedColorNum + 1,
+            emoji: testEmojis[emojiCollectionDelegate.selectedEmojiNum],
+            schedule: configuredSchedule,
+            creationDate: nil
         )
         delegate?.didCreateNewHabit(model: tracker)
     }
@@ -150,6 +197,15 @@ final class CreateHabitViewController: UIViewController {
     
     private func configureCategory() {}
     
+    private func configureCollections() {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumInteritemSpacing = 5 // значение отступа между ячейками по горизонтали
+        layout.minimumLineSpacing = 0 //  значение отступа между ячейками по вертикали
+
+        emojiCollection.collectionViewLayout = layout
+        colorCollection.collectionViewLayout = layout
+    }
+    
     private func configureSchedule() {
         let configureScheduleController = ConfigureScheduleViewController()
         configureScheduleController.delegate = self
@@ -168,28 +224,67 @@ final class CreateHabitViewController: UIViewController {
     private func makeViewLayout() {
         view.backgroundColor = .ypWhiteDay
         
+        let scrollView = UIScrollView()
+        scrollView.contentSize = CGSize(width: view.bounds.width, height: view.bounds.height)
+        scrollView.isScrollEnabled = true
+        
         let buttonStack = makeButtonStack()
         
-        view.addSubview(nameField)
-        view.addSubview(settingTable)
-        view.addSubview(buttonStack)
+        scrollView.addSubview(nameField)
+        scrollView.addSubview(settingTable)
+        scrollView.addSubview(emojiTitle)
+        scrollView.addSubview(emojiCollection)
+        scrollView.addSubview(colorTitle)
+        scrollView.addSubview(colorCollection)
+        scrollView.addSubview(buttonStack)
+        view.addSubview(scrollView)
         
         nameField.translatesAutoresizingMaskIntoConstraints = false
         settingTable.translatesAutoresizingMaskIntoConstraints = false
         buttonStack.translatesAutoresizingMaskIntoConstraints = false
+        emojiTitle.translatesAutoresizingMaskIntoConstraints = false
+        emojiCollection.translatesAutoresizingMaskIntoConstraints = false
+        colorTitle.translatesAutoresizingMaskIntoConstraints = false
+        colorCollection.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            nameField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            nameField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            nameField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
+            
+            nameField.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 10),
+            nameField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+            nameField.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
             
             settingTable.topAnchor.constraint(equalTo: nameField.bottomAnchor, constant: 24),
-            settingTable.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            settingTable.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            settingTable.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+            settingTable.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
             
-            buttonStack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            buttonStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            buttonStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+            buttonStack.topAnchor.constraint(equalTo: colorCollection.bottomAnchor, constant: 40),
+            buttonStack.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            buttonStack.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
+            buttonStack.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -20),
+            
+            emojiTitle.topAnchor.constraint(equalTo: settingTable.bottomAnchor, constant: 32),
+            emojiTitle.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 28 ),
+            emojiTitle.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: 295),
+            
+            emojiCollection.topAnchor.constraint(equalTo: emojiTitle.bottomAnchor),
+            emojiCollection.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -18),
+            emojiCollection.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 18),
+            emojiCollection.heightAnchor.constraint(equalToConstant: 156),
+            
+            colorTitle.topAnchor.constraint(equalTo: emojiCollection.bottomAnchor, constant: 16),
+            colorTitle.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 28),
+            colorTitle.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -299),
+            
+            colorCollection.topAnchor.constraint(equalTo: colorTitle.bottomAnchor),
+            colorCollection.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 18),
+            colorCollection.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -19),
+            colorCollection.heightAnchor.constraint(equalToConstant: 156),
+            
         ])
     }
     
@@ -246,3 +341,47 @@ extension CreateHabitViewController: ConfigureScheduleViewControllerDelegate {
         dismiss(animated: true)
     }
 }
+
+extension CreateHabitViewController: UICollectionViewDelegate {
+    
+}
+
+extension CreateHabitViewController: UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 18
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if collectionView == emojiCollection {
+            guard let emojiCell = collectionView
+                .dequeueReusableCell(withReuseIdentifier: EmojiCollectionViewCell.identifier, for: indexPath) as? EmojiCollectionViewCell
+            else {
+                preconditionFailure("Failed to cast UICollectionViewCell as EmojiCollectionViewCell")
+            }
+            
+            emojiCell.configure(emoji: testEmojis[indexPath.row], at: indexPath)
+            
+            return emojiCell
+        }
+        else if collectionView == colorCollection {
+            guard let colorCell = collectionView
+                .dequeueReusableCell(withReuseIdentifier: ColorCollectionViewCell.identifier, for: indexPath) as? ColorCollectionViewCell
+            else {
+                preconditionFailure("Failed to cast UICollectionViewCell as EmojiCollectionViewCell")
+            }
+            
+            colorCell.configure(at: indexPath)
+            
+            return colorCell
+        }
+        else {
+            return UICollectionViewCell()
+        }
+    }
+}
+
+
+
+
+

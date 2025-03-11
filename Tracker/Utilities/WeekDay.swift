@@ -9,3 +9,4 @@ enum WeekDay: Int {
     case friday = 6
     case saturday = 7
 }
+

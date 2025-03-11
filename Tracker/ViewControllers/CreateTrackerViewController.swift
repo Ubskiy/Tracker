@@ -6,6 +6,8 @@ protocol CreateTrackerViewControllerDelegate: AnyObject {
 
 final class CreateTrackerViewController: UIViewController {
     
+    let selectedDate: Date
+    
     private lazy var createHabitButton: UIButton = {
         let button = UIButton(type: .custom)
         
@@ -38,6 +40,15 @@ final class CreateTrackerViewController: UIViewController {
     
     weak var delegate: CreateTrackerViewControllerDelegate?
     
+    init(selectedDate: Date) {
+        self.selectedDate = selectedDate
+        super.init(nibName: nil, bundle: nil)
+    }
+        
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -52,9 +63,11 @@ final class CreateTrackerViewController: UIViewController {
     }
     
     @objc private func didTapEventButton() {
-        let createEventController = CreateEventViewController()
+        let createEventController = CreateEventViewController(selectedDate: selectedDate)
+        createEventController.delegate = self
         present(UINavigationController(rootViewController: createEventController), animated: true)
     }
+    
     
     private func setupNavigationBar() {
         let titleAttributes = [
@@ -100,6 +113,13 @@ extension CreateTrackerViewController: CreateHabitViewControllerDelegate {
     }
     
     func didCancelNewHabit() {
+        dismiss(animated: true)
+    }
+}
+
+extension CreateTrackerViewController: CreateEventViewControllerDelegate {
+    func didCreateNewEvent(model: TrackerModel) {
+        delegate?.didCreateNewTracker(model: model) // или используйте нужную категорию
         dismiss(animated: true)
     }
 }

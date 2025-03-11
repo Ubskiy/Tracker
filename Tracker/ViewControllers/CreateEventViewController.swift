@@ -1,8 +1,65 @@
 import UIKit
 
+protocol CreateEventViewControllerDelegate: AnyObject {
+    func didCreateNewEvent(model: TrackerModel)
+    func didCancelNewHabit()
+}
+
 final class CreateEventViewController: UIViewController {
     
-    private let nameField: CustomTextField = {
+    let selectedDate: Date
+    weak var delegate: CreateEventViewControllerDelegate?
+    let colorCollectionDelegate = ColorCollectionViewDelegate()
+    let emojiCollectionDelegate = EmojiCollectionViewDelegate()
+    
+    private let emojiCollection: UICollectionView = {
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        
+        collection.register(
+            EmojiCollectionViewCell.self,
+            forCellWithReuseIdentifier: EmojiCollectionViewCell.identifier
+        )
+
+        return collection
+    }()
+    
+    
+    private let colorCollection: UICollectionView = {
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        
+        collection.register(
+            ColorCollectionViewCell.self,
+            forCellWithReuseIdentifier: ColorCollectionViewCell.identifier
+        )
+
+        return collection
+    }()
+    
+    private let testEmojis: Array<String> = [
+        "🍇", "🍈", "🍉", "🍊", "🍋", "🍌", "🍍", "🥭", "🍎", "🍏",
+        "🍐", "🍒", "🍓", "🫐", "🥝", "🍅", "🫒", "🥥", "🥑", "🍆",
+        "🥔", "🥕", "🌽", "🌶️", "🫑", "🥒", "🥬", "🥦", "🧄", "🧅",
+    ]
+    
+    private lazy var emojiTitle: UILabel = {
+        let label = UILabel()
+        
+        label.text = "Emoji"
+        label.textColor = .ypBlackDay
+        label.font = .systemFont(ofSize: 19, weight: .bold)
+        return label
+    }()
+    
+    private lazy var colorTitle: UILabel = {
+        let label = UILabel()
+        
+        label.text = "Цвет"
+        label.textColor = .ypBlackDay
+        label.font = .systemFont(ofSize: 19, weight: .bold)
+        return label
+    }()
+    
+    private lazy var nameField: CustomTextField = {
         let field = CustomTextField()
         
         field.placeholder = "Введите название трекера"
@@ -13,6 +70,7 @@ final class CreateEventViewController: UIViewController {
         field.layer.cornerRadius = 16
         field.heightAnchor.constraint(equalToConstant: 75).isActive = true
         
+        field.addTarget(self, action: #selector(setCreateButtonState), for: .editingChanged)
         return field
     }()
     
@@ -29,6 +87,24 @@ final class CreateEventViewController: UIViewController {
         
         return table
     }()
+    
+    init(selectedDate: Date) {
+        self.selectedDate = selectedDate
+        super.init(nibName: nil, bundle: nil)
+    }
+        
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func configureCollections() {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumInteritemSpacing = 5 // значение отступа между ячейками по горизонтали
+        layout.minimumLineSpacing = 0 //  значение отступа между ячейками по вертикали
+
+        emojiCollection.collectionViewLayout = layout
+        colorCollection.collectionViewLayout = layout
+    }
     
     private lazy var cancelButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -52,6 +128,7 @@ final class CreateEventViewController: UIViewController {
         button.setTitle("Создать", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         button.backgroundColor = .ypGray
+        button.isEnabled = false
         
         button.layer.masksToBounds = true
         button.layer.cornerRadius = 16
@@ -67,6 +144,11 @@ final class CreateEventViewController: UIViewController {
         
         settingTable.dataSource = self
         settingTable.delegate = self
+        emojiCollection.dataSource = self
+        emojiCollection.delegate = emojiCollectionDelegate
+        colorCollection.dataSource = self
+        colorCollection.delegate = colorCollectionDelegate
+        configureCollections()
         
         appendSettingsToList()
         setupNavigationBar()
@@ -74,11 +156,38 @@ final class CreateEventViewController: UIViewController {
         hideKeyboardWhenDidTap()
     }
     
+    @objc private func setCreateButtonState() {
+        guard let habitName = nameField.text else {
+            return
+        }
+        if habitName.isEmpty {
+            createButton.backgroundColor = .ypGray
+            createButton.isEnabled = false
+        } else {
+            createButton.backgroundColor = .ypBlackDay
+            createButton.isEnabled = true
+        }
+    }
+    
     @objc private func didTapCancelButton() {
         dismiss(animated: true)
     }
     
-    @objc private func didTapCreateButton() {}
+    @objc private func didTapCreateButton() {
+        guard let eventName = nameField.text else {
+            return
+        }
+        
+        let event = TrackerModel(
+            id: UUID(),
+            name: eventName.trimmingCharacters(in: .whitespaces),
+            color: colorCollectionDelegate.selectedColorNum + 1,
+            emoji: testEmojis[emojiCollectionDelegate.selectedEmojiNum],
+            schedule: Set<WeekDay>(),
+            creationDate: selectedDate // Используем текущую дату для определения дня недели
+        )
+        delegate?.didCreateNewEvent(model: event)
+    }
     
     private func appendSettingsToList() {
         settings.append(
@@ -113,10 +222,18 @@ final class CreateEventViewController: UIViewController {
         view.addSubview(nameField)
         view.addSubview(settingTable)
         view.addSubview(buttonStack)
+        view.addSubview(emojiTitle)
+        view.addSubview(emojiCollection)
+        view.addSubview(colorTitle)
+        view.addSubview(colorCollection)
         
         nameField.translatesAutoresizingMaskIntoConstraints = false
         settingTable.translatesAutoresizingMaskIntoConstraints = false
         buttonStack.translatesAutoresizingMaskIntoConstraints = false
+        emojiTitle.translatesAutoresizingMaskIntoConstraints = false
+        emojiCollection.translatesAutoresizingMaskIntoConstraints = false
+        colorTitle.translatesAutoresizingMaskIntoConstraints = false
+        colorCollection.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             nameField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
@@ -129,7 +246,25 @@ final class CreateEventViewController: UIViewController {
             
             buttonStack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             buttonStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            buttonStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+            buttonStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            emojiTitle.topAnchor.constraint(equalTo: settingTable.bottomAnchor, constant: 32),
+            emojiTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 28 ),
+            emojiTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 295),
+            
+            emojiCollection.topAnchor.constraint(equalTo: emojiTitle.bottomAnchor),
+            emojiCollection.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18),
+            emojiCollection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18),
+            emojiCollection.heightAnchor.constraint(equalToConstant: 156),
+            
+            colorTitle.topAnchor.constraint(equalTo: emojiCollection.bottomAnchor, constant: 16),
+            colorTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 28),
+            colorTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -299),
+            
+            colorCollection.topAnchor.constraint(equalTo: colorTitle.bottomAnchor),
+            colorCollection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18),
+            colorCollection.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -19),
+            colorCollection.heightAnchor.constraint(equalToConstant: 156),
         ])
     }
     
@@ -177,3 +312,43 @@ extension CreateEventViewController: UITableViewDelegate {
         settings[indexPath.row].handler()
     }
 }
+
+extension CreateEventViewController: UICollectionViewDelegate {
+    
+}
+
+extension CreateEventViewController: UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 18
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if collectionView == emojiCollection {
+            guard let emojiCell = collectionView
+                .dequeueReusableCell(withReuseIdentifier: EmojiCollectionViewCell.identifier, for: indexPath) as? EmojiCollectionViewCell
+            else {
+                preconditionFailure("Failed to cast UICollectionViewCell as EmojiCollectionViewCell")
+            }
+            
+            emojiCell.configure(emoji: testEmojis[indexPath.row], at: indexPath)
+            
+            return emojiCell
+        }
+        else if collectionView == colorCollection {
+            guard let colorCell = collectionView
+                .dequeueReusableCell(withReuseIdentifier: ColorCollectionViewCell.identifier, for: indexPath) as? ColorCollectionViewCell
+            else {
+                preconditionFailure("Failed to cast UICollectionViewCell as EmojiCollectionViewCell")
+            }
+            
+            colorCell.configure(at: indexPath)
+            
+            return colorCell
+        }
+        else {
+            return UICollectionViewCell()
+        }
+    }
+}
+

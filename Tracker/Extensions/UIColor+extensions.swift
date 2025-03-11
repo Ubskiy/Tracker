@@ -16,6 +16,7 @@ extension UIColor {
     static let ypBlue = UIColor(named: "YPBlue") ?? UIColor.blue
     
     // Цвета Селекций
+    
     static let ypSelection1 = UIColor(named: "YPSelection1") ?? UIColor.gray
     static let ypSelection2 = UIColor(named: "YPSelection2") ?? UIColor.gray
     static let ypSelection3 = UIColor(named: "YPSelection3") ?? UIColor.gray
@@ -34,4 +35,14 @@ extension UIColor {
     static let ypSelection16 = UIColor(named: "YPSelection16") ?? UIColor.gray
     static let ypSelection17 = UIColor(named: "YPSelection17") ?? UIColor.gray
     static let ypSelection18 = UIColor(named: "YPSelection18") ?? UIColor.gray
+    
+    static let selectionArray =
+    [
+    ypSelection1,ypSelection2,ypSelection3,
+     ypSelection4,ypSelection5,ypSelection6,
+     ypSelection7,ypSelection8,ypSelection9,
+     ypSelection10,ypSelection11,ypSelection12,
+     ypSelection13,ypSelection14,ypSelection15,
+     ypSelection16,ypSelection17,ypSelection18
+    ]
 }
